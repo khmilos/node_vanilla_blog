@@ -3,6 +3,7 @@ const path = require('path')
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin')
 
 module.exports = (env, argv) => ({
   entry: ['./src/js/index.js', './src/sass/index.sass'],
@@ -13,7 +14,7 @@ module.exports = (env, argv) => ({
   },
   devtool: argv.mode === 'development' ? 'inline-source-map' : false,
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     new CopyPlugin({
       patterns: [
         { from: 'src/templates' },
