@@ -1,7 +1,13 @@
 const path = require('path')
 const fs = require('fs')
 const pug = require('pug')
-const { responseHTML, responseStream } = require('../utils/response')
+const {
+  responseStatic,
+  responseStream,
+  responseJSON,
+  success,
+  fail
+} = require('../utils/response')
 const { getPath, getExtension } = require('../utils/url')
 
 const homePug = pug.compileFile(
@@ -26,17 +32,19 @@ exports.sendClient = async (request, response) => {
   try {
     const { url } = request
     const extension = getExtension(url)
-    if (!extension || extension === '.ico' ) throw new Error('No extension')
+    if (!extension) throw new Error('No extension')
+
     const filePath = path.join(process.cwd(), getPath(url))
-    await responseStream(response, filePath, extension)
-  } catch (err) {
-    console.log(err)
+    responseStream(response, filePath, extension)
+  } catch (error) {
+    console.log(error)
+    responseJSON(response, fail(null, 'No file'), 404)
   }
 }
 
 exports.homePage = (request, response) => {
   try {
-    responseHTML(response, homePug({ articles }))
+    responseStatic(response, homePug({ articles }), 'html')
   } catch (err) {
     console.log(err)
   }

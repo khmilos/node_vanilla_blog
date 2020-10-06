@@ -8,44 +8,38 @@ const mime = {
   jpg: 'image/jpeg',
   png: 'image/png',
   svg: 'image/svg+xml',
-  js: 'application/javascript'
+  js: 'application/javascript',
+  json: 'application/json',
+  ico: 'image/vnd.microsoft.icon'
 }
 
-exports.responseJSON = (response, body, code = 200, headers = {}) => {
-  const data = JSON.stringify(body)
-  response.writeHead(code, {
-    'Content-Length': Buffer.byteLength(data),
-    'Content-Type': 'application/json',
-    ...headers
-  })
-  response.write(data)
-  response.end()
-}
+exports.success = (data, message) => ({ success: true, data, message })
 
-exports.responseHTML = (response, body, code = 200, headers = {}) => {
+exports.fail = (data, message) => ({ success: false, data, message })
+
+exports.responseJSON = (response, data, code = 200, headers = {}) => {
+  const body = JSON.stringify(data)
   response.writeHead(code, {
     'Content-Length': Buffer.byteLength(body),
-    'Content-Type': mime.html,
+    'Content-Type': mime.json,
     ...headers
   })
   response.write(body)
   response.end()
 }
 
-exports.responseCSS = (response, body, code = 200, headers) => {
+exports.responseStatic = (
+  response,
+  body,
+  extension,
+  code = 200,
+  headers = {}
+) => {
+  const mimeType = mime[extension] || mime.txt
   response.writeHead(code, {
     'Content-Length': Buffer.byteLength(body),
-    'Content-Type': mime.css,
+    'Content-Type': mimeType,
     ...headers
-  })
-  response.write(body)
-  response.end()
-}
-
-exports.responseJS = (response, body, code = 200, headers) => {
-  response.writeHead(code, {
-    'Content-Length': Buffer.byteLength(body),
-    'Content-Type': mime.js
   })
   response.write(body)
   response.end()
@@ -63,7 +57,7 @@ exports.responseStream = (response, filePath, extension = 'txt') => {
       })
       .on('close', () => {
         response.end()
-        return resolve(true)
+        resolve(true)
       })
     }
   )

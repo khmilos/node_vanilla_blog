@@ -16,6 +16,6 @@ exports.getParameters = (url) => {
 exports.getPath = (url) => url.replace(/(\?|#).*$/, '')
 
 exports.getExtension = (url) => {
-  const match = this.getPath(url).match(/\.[^.]*$/)
-  return Array.isArray(match) ? match[0] : null
+  const match = this.getPath(url).match(/\.([^.]*)$/)
+  return Array.isArray(match) ? match[1] : null
 }
