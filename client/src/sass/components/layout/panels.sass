@@ -1,0 +1,36 @@
+@use '../../variables' as v
+@use '../../svg'
+
+
+.panel
+  padding-top: 44px
+  height: 88px
+  background: v.$bg-panel
+  box-shadow: v.$bs-panel
+
+  &_bottom
+    padding: 0 0 44px 0
+
+  &__logo
+    color: v.$cl-title
+    font-size: v.$fs-caption
+    font-weight: 900
+
+  &__link
+    margin-right: 30px
+    color: v.$cl-info
+    font-size: v.$fs-title
+
+    &:last-child
+      margin-right: 0
+
+  &__profile
+    width: 44px
+    height: 44px
+    background: svg.$profile no-repeat center
+    background-size: 44px
+
+  .container
+    flex-direction: row
+    justify-content: space-between
+    align-items: center

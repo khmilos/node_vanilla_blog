@@ -12,6 +12,16 @@ html
     )
 
   body
-    header This is header
+    header.panel
+      .container
+        a(href="/").panel__logo MyLogo
+        a(href="/").panel__profile
+
     block main
-    footer This is footer
+
+    footer.panel.panel_bottom
+      .container
+        a(href="/").panel__logo MyLogo
+        nav
+          a(href="/about").panel__link About
+          a(href="/help").panel__link Help
