@@ -16,7 +16,7 @@ CREATE TABLE article (
   id TEXT PRIMARY KEY NOT NULL,
   owner_id TEXT NOT NULL,
   title TEXT NOT NULL,
-  short_description TEXT NOT NULL,
+  subtitle TEXT NOT NULL,
   content TEXT NOT NULL,
   creation_date TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL,
   FOREIGN KEY (owner_id)

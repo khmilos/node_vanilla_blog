@@ -1,0 +1,13 @@
+mixin card(article)
+  .card
+    article.card
+      .card__content
+        a(href=`/${article.id}`)
+          h4.card__title= article.title
+        .card__info
+        h5.card__description= article.subtitle
+      a(href=`/${article.id}`)
+        img(
+          src=article.image
+          alt="Article"
+        ).card__image
