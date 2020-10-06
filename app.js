@@ -6,7 +6,9 @@ const { isSqliteContains } = require('./utils/database')
 const hostname = '127.0.0.1'
 const port = process.env.PORT || 5000
 
-require('./routes/clientRoutes')
+require('./routes/client')
+require('./routes/user')
+
 
 http.createServer(listenRequest).listen(port, hostname, async () => {
   const tables = ['user', 'article', 'article_vote', 'comment', 'comment_vote']

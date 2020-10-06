@@ -13,7 +13,7 @@
   "license": "ISC",
   "nodemonConfig": {
     "events": {
-      "start": ""
+      "start": "clear"
     }
   },
   "devDependencies": {
@@ -25,6 +25,7 @@
     "nodemon": "^2.0.4"
   },
   "dependencies": {
+    "axios": "^0.20.0",
     "bcrypt": "^5.0.0",
     "pug": "^3.0.0",
     "sqlite3": "^5.0.0"

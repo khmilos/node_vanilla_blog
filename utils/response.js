@@ -62,3 +62,10 @@ exports.responseStream = (response, filePath, extension = '.txt') => {
     }
   )
 }
+
+exports.redirect = (response, url) => {
+  response.writeHead(302, {
+    Location: url
+  })
+  response.end()
+}
