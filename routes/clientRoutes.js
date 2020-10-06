@@ -1,4 +1,5 @@
 const { registerRoute } = require('../libs/router')
-const { homePage } = require('../controllers/clientControllers')
+const { homePage, sendClient } = require('../controllers/clientControllers')
 
 registerRoute('GET', '/', homePage)
+registerRoute('GET', '*', sendClient)
