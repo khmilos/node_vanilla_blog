@@ -1,0 +1,26 @@
+@use '../../variables' as v
+@use '../../svg'
+
+
+.search
+  position: relative
+
+  &__input
+    padding: 10px 15px
+    width: 100%
+    background: v.$bg-panel
+    border: 1px solid v.$bg-addition
+    border-radius: 15px
+    color: v.$cl-info
+    font-size: v.$fs-info
+
+  &::after
+    content: ''
+    position: absolute
+    top: 10px
+    right: 15px
+    display: flex
+    width: 20px
+    height: 20px
+    background: svg.$search no-repeat center
+    background-size: 20px
