@@ -9,9 +9,18 @@ const {
   fail
 } = require('../utils/response')
 const { getPath, getExtension } = require('../utils/url')
+const { parseStaticFiles, parseStaticFile } = require('../utils/file')
 
 const homePug = pug.compileFile(
   path.join(__dirname, '../client/dist/index.pug')
+)
+const notFoundPage = pug.compileFile(
+  path.join(__dirname, '../client/dist/404.pug')
+)
+
+const staticFiles = parseStaticFiles(
+  path.join(process.cwd(), '/client/dist'),
+  ['.pug']
 )
 
 const articles = [
@@ -28,24 +37,34 @@ const articles = [
   },
 ]
 
-exports.sendClient = async (request, response) => {
+exports.sendFile = async (request, response) => {
   try {
     const { url } = request
     const extension = getExtension(url)
-    if (!extension) throw new Error('No extension')
 
-    const filePath = path.join(process.cwd(), getPath(url))
-    responseStream(response, filePath, extension)
+    // Search through static files
+    if (staticFiles[url]) {
+      return responseStatic(response, staticFiles[url], extension)
+    }
+
+    // Search through assets folder
+    if (/^\/assets\//.test(url)) {
+      const filePath = path.join(process.cwd(), getPath(url))
+      return await responseStream(response, filePath, extension)
+    }
+
+    // Throw error if file not found
+    throw new Error('No such file')
   } catch (error) {
     console.log(error)
-    responseJSON(response, fail(null, 'No file'), 404)
+    responseStatic(response, notFoundPage(), '.html', 404)
   }
 }
 
 exports.homePage = (request, response) => {
   try {
-    responseStatic(response, homePug({ articles }), 'html')
-  } catch (err) {
-    console.log(err)
+    responseStatic(response, homePug({ articles }), '.html')
+  } catch (error) {
+    console.log(error)
   }
 }

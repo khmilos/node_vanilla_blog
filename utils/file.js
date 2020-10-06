@@ -7,11 +7,29 @@ exports.parseSQL = (filePath) => fs
   .replace(/\n/g, ' ')
   .replace(/\s+/g, ' ')
 
-exports.parseStaticFiles = (folderPath) => fs
-  .readdirSync(folderPath)
-  .reduce((result, fileName) => {
-    const filePath = path.join(folderPath, fileName)
-    const isFile = fs.lstatSync(filePath).isFile()
-    if (!isFile) return result
-    return { ...result, [fileName]: fs.readFileSync(filePath).toString() }
-  }, {})
+exports.parseStaticFile = (filePath) => fs
+  .readFileSync(filePath)
+  .toString()
+
+exports.parseStaticFiles = (folderPath, ignore, prefix = '') => {
+  return fs
+    .readdirSync(folderPath)
+    .reduce((result, current) => {
+      const currentPath = path.join(folderPath, current)
+      const isDir = fs.lstatSync(currentPath).isDirectory()
+      if (isDir) return {
+        ...result,
+        ...this.parseStaticFiles(
+          currentPath,
+          ignore,
+          `/${path.relative(folderPath, currentPath)}`
+        )
+      }
+      const extension = path.extname(current)
+      if (ignore.includes(extension)) return result
+      return {
+        ...result,
+        [`${prefix}/${current}`]: this.parseStaticFile(currentPath)
+      }
+    }, {})
+}
