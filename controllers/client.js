@@ -13,7 +13,7 @@ const {
 } = require('../utils')
 
 /**
- *
+ * Contains content of client static files
  */
 const staticFiles = readStaticDir(
   path.join(process.cwd(), '/client/dist'),
@@ -21,7 +21,7 @@ const staticFiles = readStaticDir(
 )
 
 /**
- *
+ * Contains pug templates
  */
 const templates = {
   home: pug.compileFile(path.join(process.cwd(), '/client/dist/index.pug')),
@@ -29,9 +29,9 @@ const templates = {
 }
 
 /**
- *
- * @param {*} request
- * @param {*} response
+ * Creates rendered home page response
+ * @param {ClientRequest} request
+ * @param {ServerResponse} response
  */
 exports.homePage = (request, response) => {
   try {
@@ -42,9 +42,9 @@ exports.homePage = (request, response) => {
 }
 
 /**
- * 
- * @param {*} request
- * @param {*} response
+ * Creates static file response
+ * @param {ClientRequest} request
+ * @param {ServerResponse} response
  */
 exports.sendFile = async (request, response) => {
   try {
