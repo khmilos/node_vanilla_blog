@@ -53,7 +53,7 @@ exports.sendFile = async (request, response) => {
 
     // Search through static files
     if (staticFiles[pathURL]) {
-      return sendResponseStream(response, staticFiles[pathURL])
+      return await sendResponse(response, staticFiles[pathURL])
     }
 
     // Search through assets folder

@@ -1,5 +1,5 @@
 const { registerRoute } = require('../libs/router')
-const { loginUser, githubCallback } = require('../controllers/user')
+const { loginGithub, callbackGithub } = require('../controllers/user')
 
-registerRoute('GET', '/login/github', loginUser)
-registerRoute('GET', '/login/github/callback', githubCallback)
+registerRoute('GET', '/login/github', loginGithub)
+registerRoute('GET', '/login/github/callback', callbackGithub)

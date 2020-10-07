@@ -7,7 +7,6 @@ const {
   traverse,
   combineObjects,
   getURLPath,
-  getURLParameters,
   sendResponseJSON,
   fail
 } = require('../utils')
@@ -55,16 +54,15 @@ exports.listenRequest = (request, response) => {
   // Traverse to get URL request handler
   const traversing = traverse(routeTree[method], segments)
   const { node: handler, entities } = traversing
-  const parameters = getURLParameters(url)
 
   // If there are no handler call wildcard handler or send error response
   if (!handler) {
     if (method === 'GET' && routeTree.GET['*']) {
-      return routeTree.GET['*']['/'](request, response, parameters, entities)
+      return routeTree.GET['*']['/'](request, response, entities)
     }
     return sendResponseJSON(response, fail(null, 'No such route'), 404)
   }
 
   // If handler exists call it
-  return handler(request, response, parameters, entities)
+  return handler(request, response, entities)
 }

@@ -254,6 +254,7 @@ exports.sendResponseJSON = (response, body, code = 200, headers = {}) => {
  * @returns {Promise<(boolean|Error)>} Promise object represents status of Stream prcoess
  */
 exports.sendResponseStream = (response, filePath) => {
+  console.log(filePath)
   const mimeType = mime[path.extname(filePath)] || mime['.txt']
 
   return new Promise((resolve, reject) => {
