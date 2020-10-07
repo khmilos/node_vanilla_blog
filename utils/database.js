@@ -1,4 +1,4 @@
-const { isArraysEqual } = require('./common')
+const { isArraysEqual } = require('../utils')
 
 exports.isSqliteContains = (db, tables) => new Promise((resolve, reject) => {
   const query = 'SELECT name FROM sqlite_master WHERE type=\'table\';'

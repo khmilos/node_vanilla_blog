@@ -9,7 +9,6 @@ const port = process.env.PORT || 5000
 require('./routes/client')
 require('./routes/user')
 
-
 http.createServer(listenRequest).listen(port, hostname, async () => {
   const tables = ['user', 'article', 'article_vote', 'comment', 'comment_vote']
   const tablesExist = await isSqliteContains(db, tables)
