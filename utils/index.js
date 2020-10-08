@@ -173,9 +173,11 @@ exports.getURLParameters = (url) => {
   if (!Array.isArray(match)) return null
   return match[1]
     .split('&')
-    .map((pair) => /^\w+=\w+$/.test(pair) ? pair.split('=') : null)
+    .map((pair) => /=/g.test(pair) ? pair.split('=') : null)
     .filter((pair) => pair)
-    .reduce((result, pair) => ({ ...result, [pair[0]]: pair[1] }), {})
+    .reduce((result, pair) => {
+      return { ...result, [pair[0]]: pair[1] }
+    }, {})
 }
 
 /**
@@ -184,8 +186,18 @@ exports.getURLParameters = (url) => {
  * @returns {(string|null)} extension if exists and null if not
  */
 exports.getURLFileExtension = (url) => {
-  const match = this.getPath(url).match(/\.[^.]*$/)
+  const match = this.getURLPath(url).match(/\.[^.]*$/)
   return Array.isArray(match) ? match[0] : null
+}
+
+/**
+ * Returns combination of params to URL friendly
+ * @param {Object} params - parameters to add to URL
+ * @returns {string} reporesents combined params
+ */
+exports.combineURLParams = (params) => {
+  return Object.entries(params)
+    .map((param) => param[0] + '=' + param[1]).join('&')
 }
 
 /**
@@ -194,7 +206,7 @@ exports.getURLFileExtension = (url) => {
  * @param {string} message - response message
  * @returns {{ success: boolean, data: Object, message: string }}
  */
-exports.success = (data, message) => ({ success: true, data, message })
+exports.success = (data, message = '') => ({ success: true, data, message })
 
 /**
  * Returns JSON data as specified response structure with error status
@@ -276,9 +288,10 @@ exports.sendResponseStream = (response, filePath) => {
  * Create redirect response to specified URL
  * @param {ServerResponse} response - response to process
  * @param {string} url - URL to redirect
+ * @param {Object} headers - response headers
  */
-exports.sendRedirect = (response, url) => {
-  response.writeHead(302, { Location: url })
+exports.sendRedirect = (response, url, headers = {}) => {
+  response.writeHead(302, { Location: url, ...headers })
   response.end()
 }
 

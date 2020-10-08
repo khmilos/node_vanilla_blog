@@ -6,14 +6,15 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "init-db": "node cli/init_db.js",
-    "start": "nodemon app.js -e js,mjs,json,pug"
+    "dev": "nodemon app.js -e js,mjs,json,pug",
+    "start": "node app.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "nodemonConfig": {
     "events": {
-      "start": "clear"
+      "start": ""
     }
   },
   "devDependencies": {

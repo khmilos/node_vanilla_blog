@@ -1,14 +1,90 @@
-// const axios = require('axios')
-// const {
-//   fail,
-//   success,
-//   sendResponseJSON,
-//   sendRedirect,
-//   getURLParameters
-// } = require('../utils')
+/**
+ * @typedef {import('http').ClientRequest} ClientRequest
+ * @typedef {import('http').ServerResponse} ServerResponse
+ */
 
-// const clientId = 'Iv1.72b8c2a25a616adf'
-// const clientSecret = '44ee5ec22db2a2ea85a1683469079c2ecba075f4'
+const axios = require('axios')
+const {
+  // fail,
+  success,
+  sendResponseJSON,
+  sendRedirect,
+  getURLParameters,
+  combineURLParams,
+  sendResponse
+} = require('../utils')
+const {
+  googleClientId,
+  googleClientSecret
+} = require('../config')
+const templates = require('../templates')
+
+/**
+ * Controller for first Oauth Google user authorization. Redirects user to Google login
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
+ */
+exports.loginGoogle = (request, response) => {
+  try {
+    const params = combineURLParams({
+      client_id: googleClientId,
+      redirect_uri: 'http://localhost:5000/login/google/callback',
+      response_type: 'code',
+      scope: 'https://www.googleapis.com/auth/plus.login'
+    })
+    const url = 'https://accounts.google.com/o/oauth2/v2/auth'
+    sendRedirect(response, url + '?' + params)
+  } catch (error) {
+    console.log(error)
+    sendResponse(response, templates[404](), '.html', 404)
+  }
+}
+
+/**
+ * Controller for Oauth Google callback
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
+ */
+exports.callbackGoogle = async (request, response) => {
+  try {
+    const { url } = request
+    const { code } = getURLParameters(url)
+
+    // Request to Google API for access token
+    const headers = { 'Content-Type': 'application/x-www-form-urlencoded' }
+    const data = combineURLParams({
+      code,
+      client_id: googleClientId,
+      client_secret: googleClientSecret,
+      redirect_uri: 'http://localhost:5000/login/google/callback&grant_type=authorization_code'
+    })
+    const { data: { access_token: accessToken } } = await axios.post(
+      'https://oauth2.googleapis.com/token',
+      data,
+      { headers }
+    )
+
+    // Request to Google API for user data
+    const { data: user } = await axios.get(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${accessToken}`)
+
+    const h = { 'Set-Cookie': 'mycookie=test' }
+
+    sendRedirect(response, '/', h)
+    // sendResponseJSON(response, success(user))
+  } catch (error) {
+    console.log(error)
+    sendResponse(response, templates[404](), '.html', 404)
+  }
+}
+
+// {
+//   id: '110401388113501598283',
+//   name: 'Oleksandr Khmil',
+//   given_name: 'Oleksandr',
+//   family_name: 'Khmil',
+//   picture: 'https://lh4.googleusercontent.com/-vHujaxuESU8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnMUN0zkj0O7_CY0nbZ75VS2cU7zA/photo.jpg',
+//   locale: 'ru'
+// }
 
 // /**
 //  *
@@ -43,108 +119,27 @@
 //       client_secret: clientSecret,
 //       code
 //     })
-//     const githubResponse = await axios
-//       .post(
-//         'https://github.com/login/oauth/access_token',
-//         body,
-//         { headers }
-//       )
+//     const githubResponse = await axios.post(
+//       'https://github.com/login/oauth/access_token',
+//       body,
+//       { headers }
+//     )
 //     const params = new URLSearchParams(githubResponse.data)
 //     const accessToken = params.get('access_token')
 
-//     console.log('token', accessToken)
-//     sendResponseJSON(response, success(null, 'callback github success'), 200)
+//     // GET request to fetch Github user
+//     const fetchedUser = await axios.get('https://api.github.com/user', {
+//       headers: {
+//         Authorization: 'token ' + accessToken
+//       }
+//     })
+
+//     sendResponseJSON(response, success(fetchedUser.data, 'callback github success'), 200)
 //   } catch (error) {
 //     console.log('callback github', error)
 //     sendResponseJSON(response, fail(null, 'callback github error'), 404)
 //   }
 // }
 
-// // const { fetchPOST, fetchGithubUser } = require('../utils/fetch')
-// // const { redirect } = require('../utils/response')
-// // const { getParameters } = require('../utils/url')
-
-// // const clientId = 'Iv1.72b8c2a25a616adf'
-// // const clientSecret = '44ee5ec22db2a2ea85a1683469079c2ecba075f4'
-
-// // exports.loginUser = (request, response) => {
-// //   try {
-// //     const redirectURI = 'http://localhost:5000/login/github/callback'
-// //     const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectURI}`
-// //     redirect(response, url)
-// //   } catch (error) {
-// //     console.log(error)
-// //   }
-// // }
-
-// // access_token=db5bdefc34a83e3d28a795ab732efc7f40ed2119&expires_in=28800&refresh_token=r1.cadce3114083afdcad00f5d0ed59ab0a4e64a3a91efd915f1980ba74032ef1c15bd1933062ca1291&refresh_token_expires_in=15724800&scope=&token_type=bearer
-
-// // exports.githubCallback = async (request, response) => {
-// //   try {
-// //     const { url } = request
-// //     const { code } = getParameters(url)
-// //     const accessToken = await fetchPOST(code, 'https://github.com/login/oauth/access_token')
-// //     await fetchGithubUser(accessToken)
-// //   } catch (error) {
-// //     console.log(error)
-// //     console.log('error')
-// //   }
-// // }
-
-// // http://localhost:9000/login/github/callback?code=dbeb6fce88a034fa3196
-
-// // async function getAccessToken({ code, client_id, client_secret }) {
-// //   const request = await fetch("https://github.com/login/oauth/access_token", {
-// //     method: "POST",
-// //     headers: {
-// //       "Content-Type": "application/json"
-// //     },
-// //     body: JSON.stringify({
-// //       client_id,
-// //       client_secret,
-// //       code
-// //     })
-// //   });
-// //   const text = await request.text();
-// //   const params = new URLSearchParams(text);
-// //   return params.get("access_token");
-// // }
-
-// // async function fetchGitHubUser(token) {
-// //   const request = await fetch("https://api.github.com/user", {
-// //     headers: {
-// //       Authorization: "token " + token
-// //     }
-// //   });
-// //   return await request.json();
-// // }
-
-// // app.get("/login/github/callback", async (req, res) => {
-// //   const code = req.query.code;
-// //   const access_token = await getAccessToken({ code, client_id, client_secret });
-// //   const user = await fetchGitHubUser(access_token);
-// //   if (user) {
-// //     req.session.access_token = access_token;
-// //     req.session.githubId = user.id;
-// //     res.redirect("/admin");
-// //   } else {
-// //     res.send("Login did not succeed!");
-// //   }
-// // });
-
-// // app.get("/admin", async (req, res) => {
-// //   if (req.session && req.session.githubId === 1126497) {
-// //     res.send("Hello Kevin <pre>" + JSON.stringify(req.session, null, 2));
-// //     // Possible use "fetchGitHubUser" with the access_token
-// //   } else {
-// //     res.redirect("/login/github");
-// //   }
-// // });
-
-// // app.get("/logout", (req, res) => {
-// //   if (req.session) req.session = null;
-// //   res.redirect("/");
-// // });
-
-// // const PORT = process.env.PORT || 9000;
-// // app.listen(PORT, () => console.log("Listening on localhost:" + PORT));
+// clientID: 1063158587987-udbst9bdu0j5j2dbnp84m8mnggo291md.apps.googleusercontent.com
+// clientSecret: -1dqWfNL9cABnw2vJPSAPc6Y

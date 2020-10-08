@@ -4,29 +4,14 @@
  */
 
 const path = require('path')
-const pug = require('pug')
 const {
-  readStaticDir,
   sendResponse,
   sendResponseStream,
-  getURLPath
+  getURLPath,
+  getURLFileExtension
 } = require('../utils')
-
-/**
- * Contains content of client static files
- */
-const staticFiles = readStaticDir(
-  path.join(process.cwd(), '/client/dist'),
-  ['.pug']
-)
-
-/**
- * Contains pug templates
- */
-const templates = {
-  home: pug.compileFile(path.join(process.cwd(), '/client/dist/index.pug')),
-  404: pug.compileFile(path.join(process.cwd(), '/client/dist/404.pug'))
-}
+const templates = require('../templates')
+const staticFiles = require('../staticFiles')
 
 /**
  * Creates rendered home page response
@@ -37,7 +22,7 @@ exports.homePage = (request, response) => {
   try {
     sendResponse(response, templates.home({ articles: [] }), '.html')
   } catch (error) {
-    console.log(error)
+    sendResponse(response, templates[404](), '.html', 404)
   }
 }
 
@@ -53,7 +38,11 @@ exports.sendFile = async (request, response) => {
 
     // Search through static files
     if (staticFiles[pathURL]) {
-      return await sendResponse(response, staticFiles[pathURL])
+      return sendResponse(
+        response,
+        staticFiles[pathURL],
+        getURLFileExtension(pathURL)
+      )
     }
 
     // Search through assets folder
