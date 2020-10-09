@@ -10,6 +10,11 @@ html
       rel="stylesheet"
       href="/style.css"
     )
+    link(
+      rel="Shortcut Icon"
+      href="/static/favicon.ico"
+      type="image/x-icon"
+    )
     script(
       src="/main.boundle.js"
       defer
@@ -19,11 +24,14 @@ html
     header.panel
       .container
         a(href="/").panel__logo MyLogo
-        //- .panel__profile
-        //-   a(href="/").panel__user Oleksandr Khmil
-          //- a(href="/").panel__avatar-wrapper
-          //-   img(src="https://lh4.googleusercontent.com/-vHujaxuESU8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnMUN0zkj0O7_CY0nbZ75VS2cU7zA/photo.jpg" alt="User").panel__avatar
-        a(href="/login/google").panel__login
+        if user
+          .panel__profile
+            a(href="/").panel__user #{user.name}
+            a(href="/").panel__avatar-wrapper
+              img(src=user.picture alt="User").panel__avatar
+        else
+          a(href="/login/google").panel__login
+        
 
     block main
 

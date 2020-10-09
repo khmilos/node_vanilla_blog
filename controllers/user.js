@@ -5,9 +5,6 @@
 
 const axios = require('axios')
 const {
-  // fail,
-  success,
-  sendResponseJSON,
   sendRedirect,
   getURLParameters,
   combineURLParams,
@@ -64,84 +61,10 @@ exports.callbackGoogle = async (request, response) => {
       { headers }
     )
 
-    // Request to Google API for user data
-    const { data: user } = await axios.get(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${accessToken}`)
-
-    // const h = { 'Set-Cookie': 'mycookie=test' }
-
-    response.setHeader('Set-Cookie', 'mycookie=test')
-
+    response.setHeader('Set-Cookie', `access_token=${accessToken}; Path=/`)
     sendRedirect(response, '/')
-    // sendResponseJSON(response, success(user))
   } catch (error) {
     console.log(error)
     sendResponse(response, templates[404](), '.html', 404)
   }
 }
-
-// {
-//   id: '110401388113501598283',
-//   name: 'Oleksandr Khmil',
-//   given_name: 'Oleksandr',
-//   family_name: 'Khmil',
-//   picture: 'https://lh4.googleusercontent.com/-vHujaxuESU8/AAAAAAAAAAI/AAAAAAAAAAA/AMZuucnMUN0zkj0O7_CY0nbZ75VS2cU7zA/photo.jpg',
-//   locale: 'ru'
-// }
-
-// /**
-//  *
-//  * @param {*} request
-//  * @param {*} response
-//  */
-// exports.loginGithub = (request, response) => {
-//   try {
-//     const redirectURI = 'http://localhost:5000/login/github/callback'
-//     const url = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectURI}`
-//     sendRedirect(response, url)
-//   } catch (error) {
-//     console.log('login github', error)
-//     sendResponseJSON(response, fail(null, 'login github error'), 404)
-//   }
-// }
-
-// /**
-//  *
-//  * @param {*} request
-//  * @param {*} response
-//  */
-// exports.callbackGithub = async (request, response) => {
-//   try {
-//     const { url } = request
-//     const { code } = getURLParameters(url)
-
-//     // POST request to the Github
-//     const headers = { 'Content-Type': 'application/json' }
-//     const body = JSON.stringify({
-//       client_id: clientId,
-//       client_secret: clientSecret,
-//       code
-//     })
-//     const githubResponse = await axios.post(
-//       'https://github.com/login/oauth/access_token',
-//       body,
-//       { headers }
-//     )
-//     const params = new URLSearchParams(githubResponse.data)
-//     const accessToken = params.get('access_token')
-
-//     // GET request to fetch Github user
-//     const fetchedUser = await axios.get('https://api.github.com/user', {
-//       headers: {
-//         Authorization: 'token ' + accessToken
-//       }
-//     })
-
-//     sendResponseJSON(response, success(fetchedUser.data, 'callback github success'), 200)
-//   } catch (error) {
-//     console.log('callback github', error)
-//     sendResponseJSON(response, fail(null, 'callback github error'), 404)
-//   }
-// }
-
-// clientID: 1063158587987-udbst9bdu0j5j2dbnp84m8mnggo291md.apps.googleusercontent.com
-// clientSecret: -1dqWfNL9cABnw2vJPSAPc6Y

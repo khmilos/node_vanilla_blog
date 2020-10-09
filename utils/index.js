@@ -322,10 +322,3 @@ exports.getRequestCookie = (request) => {
     return { ...result, [key]: decodeURI(value) }
   }, {})
 }
-
-exports.transferRequestCookie = (request, response) => {
-  const cookie = this.getRequestCookie(request)
-  if (Object.keys(cookie).length === 0) return
-  const toSend = Object.entries(cookie).map((pair) => pair[0] + '=' + pair[1])
-  response.setHeader('Set-Cookie', toSend)
-}

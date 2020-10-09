@@ -8,20 +8,27 @@ const {
   sendResponse,
   sendResponseStream,
   getURLPath,
-  getURLFileExtension
+  getURLFileExtension,
+  getRequestCookie
 } = require('../utils')
 const templates = require('../templates')
 const staticFiles = require('../staticFiles')
+const { getUserDataFromGoogle } = require('../models/user')
 
 /**
  * Creates rendered home page response
  * @param {ClientRequest} request
  * @param {ServerResponse} response
  */
-exports.homePage = (request, response) => {
+exports.homePage = async (request, response) => {
   try {
-    // response.setHeader('Set-Cookie', ['type=ninja', 'language=javascript'])
-    sendResponse(response, templates.home({ articles: [] }), '.html')
+    const { access_token: accessToken } = getRequestCookie(request)
+    let user = null
+    if (accessToken) {
+      user = await getUserDataFromGoogle(accessToken)
+      console.log(user)
+    }
+    sendResponse(response, templates.home({ articles: [], user }), '.html')
   } catch (error) {
     console.log(error)
     sendResponse(response, templates[404](), '.html', 404)
