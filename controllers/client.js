@@ -40,6 +40,30 @@ exports.homePage = async (request, response) => {
 }
 
 /**
+ * Sends rendered profile page response
+ * @param {ClientRequest} request
+ * @param {ServerResponse} response
+ */
+exports.profilePage = async (request, response) => {
+  try {
+    const { access_token: accessToken } = getRequestCookie(request)
+    let user = null
+    try {
+      user = accessToken ? await userAuthorization(accessToken) : null
+    } catch (error) {
+      response.setHeader(
+        'Set-Cookie',
+        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+      )
+    }
+    sendResponse(response, templates.profile({ articles: [], user }), '.html')
+  } catch (error) {
+    console.log(error)
+    sendResponse(response, templates[404](), '.html', 404)
+  }
+}
+
+/**
  * Creates static file response
  * @param {ClientRequest} request
  * @param {ServerResponse} response

@@ -26,12 +26,11 @@ html
         a(href="/").panel__logo MyLogo
         if user
           .panel__profile
-            a(href="/").panel__user #{user.nickname}
-            a(href="/").panel__avatar-wrapper
+            a(href="/profile").panel__user #{user.nickname}
+            a(href="/profile").panel__avatar-wrapper
               img(src=user.avatar alt="User").panel__avatar
         else
           a(href="/login/google").panel__login
-        
 
     block main
 
