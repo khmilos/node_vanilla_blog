@@ -1,0 +1,16 @@
+@use '../../variables' as v
+
+
+.modal
+  position: absolute
+  z-index: v.$zi-modal
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  display: none
+  background: v.$bg-modal-wrapper
+  overflow: auto
+
+  &_active
+    display: flex

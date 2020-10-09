@@ -1,5 +1,6 @@
 extends base.pug
 include ./components/articles/card.pug
+include ./components/articles/modalCreate.pug
 
 
 block main
@@ -24,3 +25,6 @@ block main
         each article in articles
           .col
             +card(article)
+
+block modals
+  +modalCreate()
