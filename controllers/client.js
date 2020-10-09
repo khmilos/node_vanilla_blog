@@ -29,10 +29,9 @@ exports.homePage = async (request, response) => {
     } catch (error) {
       response.setHeader(
         'Set-Cookie',
-        'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       )
     }
-    // const user = accessToken ? await userAuthorization(accessToken) : null
     sendResponse(response, templates.home({ articles: [], user }), '.html')
   } catch (error) {
     console.log(error)
