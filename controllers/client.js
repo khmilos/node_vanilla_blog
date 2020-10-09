@@ -13,7 +13,7 @@ const {
 } = require('../utils')
 const templates = require('../templates')
 const staticFiles = require('../staticFiles')
-const { getUserDataFromGoogle } = require('../models/user')
+const { userAuthorization } = require('../models/user')
 
 /**
  * Creates rendered home page response
@@ -23,11 +23,7 @@ const { getUserDataFromGoogle } = require('../models/user')
 exports.homePage = async (request, response) => {
   try {
     const { access_token: accessToken } = getRequestCookie(request)
-    let user = null
-    if (accessToken) {
-      user = await getUserDataFromGoogle(accessToken)
-      console.log(user)
-    }
+    const user = accessToken ? await userAuthorization(accessToken) : null
     sendResponse(response, templates.home({ articles: [], user }), '.html')
   } catch (error) {
     console.log(error)

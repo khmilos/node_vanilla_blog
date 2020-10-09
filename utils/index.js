@@ -39,6 +39,25 @@ exports.combineObjects = (A, B) => {
 }
 
 /**
+ * Returns recursively compared objects content and keys
+ * @param {Object} A - first object
+ * @param {Object} B - second object
+ * @returns {boolean} compare result
+ */
+exports.isObjectsEqual = (A, B) => {
+  const keysA = Object.keys(A)
+  const keysB = Object.keys(B)
+
+  if (!this.isArraysEqual(keysA, keysB)) return false
+  return keysA.reduce((result, key) => {
+    if (typeof A[key] === 'object' && typeof B[key] === 'object') {
+      return this.isObjectsEqual(A[key], B[key]) ? result : false
+    }
+    return A[key] === B[key] ? result : false
+  }, true)
+}
+
+/**
  * Returns result of two arrays comparison without regard to the sequence of elements
  * @param {Array} A - first array
  * @param {Array} B - second array

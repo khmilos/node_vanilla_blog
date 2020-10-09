@@ -26,9 +26,9 @@ html
         a(href="/").panel__logo MyLogo
         if user
           .panel__profile
-            a(href="/").panel__user #{user.name}
+            a(href="/").panel__user #{user.nickname}
             a(href="/").panel__avatar-wrapper
-              img(src=user.picture alt="User").panel__avatar
+              img(src=user.avatar alt="User").panel__avatar
         else
           a(href="/login/google").panel__login
         
