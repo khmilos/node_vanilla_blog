@@ -3,6 +3,24 @@ include ./components/articles/card.pug
 
 
 block main
-  main.main
+  main.main.profile
     .container
-      p THIS IS PROFILE
+      .profile__head
+        h1.profile__title My Articles:
+        button.button Create new article
+
+      .search.mb-50
+        input(
+          type="text"
+          name="search"
+          aria-label="Search through site content"
+          placeholder="Search article..."
+        )#search.search__input
+
+      if (!article)
+        p.message You haven't posted any articles yet
+
+      .row
+        each article in articles
+          .col
+            +card(article)
