@@ -20,8 +20,10 @@ const staticFiles = require('../staticFiles')
  */
 exports.homePage = (request, response) => {
   try {
+    // response.setHeader('Set-Cookie', ['type=ninja', 'language=javascript'])
     sendResponse(response, templates.home({ articles: [] }), '.html')
   } catch (error) {
+    console.log(error)
     sendResponse(response, templates[404](), '.html', 404)
   }
 }

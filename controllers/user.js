@@ -67,9 +67,11 @@ exports.callbackGoogle = async (request, response) => {
     // Request to Google API for user data
     const { data: user } = await axios.get(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${accessToken}`)
 
-    const h = { 'Set-Cookie': 'mycookie=test' }
+    // const h = { 'Set-Cookie': 'mycookie=test' }
 
-    sendRedirect(response, '/', h)
+    response.setHeader('Set-Cookie', 'mycookie=test')
+
+    sendRedirect(response, '/')
     // sendResponseJSON(response, success(user))
   } catch (error) {
     console.log(error)

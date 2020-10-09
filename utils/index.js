@@ -232,11 +232,9 @@ exports.sendResponse = (
   headers = {}
 ) => {
   const mimeType = mime[extension] || mime['.txt']
-  response.writeHead(code, {
-    'Content-Length': Buffer.byteLength(body),
-    'Content-Type': mimeType,
-    ...headers
-  })
+  response.statusCode = code
+  response.setHeader('Content-Length', Buffer.byteLength(body))
+  response.setHeader('Content-Type', mimeType)
   response.write(body)
   response.end()
 }
@@ -250,11 +248,9 @@ exports.sendResponse = (
  */
 exports.sendResponseJSON = (response, body, code = 200, headers = {}) => {
   const bodyString = JSON.stringify(body)
-  response.writeHead(code, {
-    'Content-Length': Buffer.byteLength(bodyString),
-    'Content-Type': mime['.json'],
-    ...headers
-  })
+  response.statusCode = code
+  response.setHeader('Content-Length', Buffer.byteLength(bodyString))
+  response.setHeader('Content-Type', mime['.json'])
   response.write(bodyString)
   response.end()
 }
@@ -274,7 +270,8 @@ exports.sendResponseStream = (response, filePath) => {
     stream
       .on('error', (error) => reject(error))
       .on('open', () => {
-        response.writeHead(200, { 'Content-Type': mimeType })
+        response.statusCode = 200
+        response.setHeader('Content-Type', mimeType)
         stream.pipe(response)
       })
       .on('close', () => {
@@ -291,7 +288,8 @@ exports.sendResponseStream = (response, filePath) => {
  * @param {Object} headers - response headers
  */
 exports.sendRedirect = (response, url, headers = {}) => {
-  response.writeHead(302, { Location: url, ...headers })
+  response.statusCode = 302
+  response.setHeader('Location', url)
   response.end()
 }
 
@@ -315,7 +313,7 @@ exports.getRequestBody = (request) => {
  * @param {ClientRequest} request - request to process
  * @returns {Object} Cookies Dictionary Object
  */
-exports.parseCookies = (request) => {
+exports.getRequestCookie = (request) => {
   const { cookie } = request.headers
   if (!cookie) return {}
   return cookie.split(';').reduce((result, pair) => {
@@ -323,4 +321,11 @@ exports.parseCookies = (request) => {
     const value = pair.replace(/^.*=/g, '')
     return { ...result, [key]: decodeURI(value) }
   }, {})
+}
+
+exports.transferRequestCookie = (request, response) => {
+  const cookie = this.getRequestCookie(request)
+  if (Object.keys(cookie).length === 0) return
+  const toSend = Object.entries(cookie).map((pair) => pair[0] + '=' + pair[1])
+  response.setHeader('Set-Cookie', toSend)
 }
