@@ -14,6 +14,7 @@ const {
 const templates = require('../templates')
 const staticFiles = require('../staticFiles')
 const { userAuthorization } = require('../models/user')
+const { getAllArticles } = require('../models/article')
 
 /**
  * Creates rendered home page response
@@ -32,7 +33,12 @@ exports.homePage = async (request, response) => {
         'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       )
     }
-    sendResponse(response, templates.home({ articles: [], user }), '.html')
+
+    const articles = await getAllArticles()
+
+    console.log(articles)
+
+    sendResponse(response, templates.home({ articles, user }), '.html')
   } catch (error) {
     console.log(error)
     sendResponse(response, templates[404](), '.html', 404)
@@ -56,7 +62,10 @@ exports.profilePage = async (request, response) => {
         'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
       )
     }
-    sendResponse(response, templates.profile({ articles: [], user }), '.html')
+
+    const articles = await getAllArticles()
+
+    sendResponse(response, templates.profile({ articles, user }), '.html')
   } catch (error) {
     console.log(error)
     sendResponse(response, templates[404](), '.html', 404)

@@ -323,7 +323,7 @@ exports.getRequestBody = (request) => {
     request
       .on('error', (error) => reject(error))
       .on('data', (chunk) => body.push(chunk))
-      .on('end', () => resolve(body))
+      .on('end', () => resolve(body.toString()))
   })
 }
 
@@ -340,4 +340,12 @@ exports.getRequestCookie = (request) => {
     const value = pair.replace(/^.*=/g, '')
     return { ...result, [key]: decodeURI(value) }
   }, {})
+}
+
+exports.getFormData = (data) => {
+  return data.split('&')
+    .reduce((result, pair) => ({
+      ...result,
+      [pair.replace(/=.*$/g, '').trim()]: pair.replace(/^.*=/g, '').trim()
+    }), {})
 }

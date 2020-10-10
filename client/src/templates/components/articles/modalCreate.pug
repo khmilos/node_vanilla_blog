@@ -5,6 +5,7 @@ mixin modalCreate()
       h2.modal__title Create article:
       form(
         id="article-create"
+        action="/api/article"
         method="POST"
       ).form
         .form__field

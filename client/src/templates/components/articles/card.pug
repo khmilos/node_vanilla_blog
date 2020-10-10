@@ -4,7 +4,7 @@ mixin card(article)
       a(href=`/${article.id}`).card__title-link
         h4.card__title.js-card-title= article.title
       .card__info
-      h5.card__description= article.subtitle
+      h5.card__description= article.description
     a(href=`/${article.id}`)
       img(
         src=article.image

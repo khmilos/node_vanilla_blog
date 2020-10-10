@@ -6,6 +6,7 @@ const port = process.env.PORT || 5000
 
 require('./routes/client')
 require('./routes/user')
+require('./routes/article')
 
 const app = http.createServer((request, response) => {
   listenRequest(request, response)

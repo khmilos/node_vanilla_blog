@@ -45,6 +45,7 @@ exports.getAllArticles = () => {
       if (error) return reject(error)
       const articles = rows.map((row) => ({
         id: row.id,
+        title: row.title,
         ownerId: row.owner_id,
         description: row.description,
         content: row.content,

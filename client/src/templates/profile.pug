@@ -18,7 +18,7 @@ block main
           placeholder="Search article..."
         )#search.search__input
 
-      if (!article)
+      if (articles.length === 0)
         p.message You haven't posted any articles yet
 
       .row
