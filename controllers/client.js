@@ -36,8 +36,6 @@ exports.homePage = async (request, response) => {
 
     const articles = await getAllArticles()
 
-    console.log(articles)
-
     sendResponse(response, templates.home({ articles, user }), '.html')
   } catch (error) {
     console.log(error)

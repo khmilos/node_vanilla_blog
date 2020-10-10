@@ -7,9 +7,10 @@ mixin modalCreate()
         id="article-create"
         action="/api/article"
         method="POST"
+        enctype = "multipart/form-data"
       ).form
         .form__field
-          label.form__label Aritcle's Title:
+          label(for="article-create-title").form__label Aritcle's Title:
           input(
             name="title"
             id="article-create-title"
@@ -17,14 +18,21 @@ mixin modalCreate()
             placeholder="Article's Title..."
           ).form__text
         .form__field
-          label.form__label Article's Description:
+          label(for="article-create-image").form__label Article's Image:
+          input(
+            type="file"
+            name="image"
+            id="article-create-image"
+          ).modal__file
+        .form__field
+          label(for="article-create-description").form__label Article's Description:
           textarea(
             name="description"
             id="article-create-description"
             placeholder="Article's Description..."
           ).form__textarea.form__textarea_short
         .form__field
-          label.form__label Article's Content:
+          label(for="article-create-content").form__label Article's Content:
           textarea(
             name="content"
             id="article-create-content"

@@ -3,21 +3,22 @@
  * @typedef {import('http').ServerResponse} ServerResponse
  */
 
+const fs = require('fs')
+const path = require('path')
 const {
-  getRequestBody,
   sendResponseJSON,
   fail,
-  getFormData,
-  sendRedirect,
-  getRequestCookie
+  getRequestMultilineData,
+  getRequestCookie,
+  sendRedirect
 } = require('../utils')
 const { createArticle } = require('../models/article')
 const { userAuthorization } = require('../models/user')
 
 /**
  * Creates new article and redirects to profile page
- * @param {ClientRequest} request
- * @param {ServerResponse} response
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
  */
 exports.createArticleController = async (request, response) => {
   try {
@@ -32,9 +33,24 @@ exports.createArticleController = async (request, response) => {
       )
     }
 
-    const body = await getRequestBody(request)
-    const article = getFormData(body)
-    await createArticle({ ...article, ownerId: user.id })
+    const {
+      title,
+      description,
+      content,
+      image
+    } = await getRequestMultilineData(request)
+    const article = await createArticle({
+      ownerId: user.id,
+      title,
+      description,
+      content
+    })
+
+    fs.appendFileSync(
+      path.join(process.cwd(), '/assets/article/', article.id + '.jpg'),
+      image
+    )
+
     sendRedirect(response, '/profile')
   } catch (error) {
     console.log(error)

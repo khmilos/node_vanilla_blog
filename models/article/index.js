@@ -21,7 +21,7 @@ const getAllArticlesScript = readSQLFile(path.join(
  * @param {string} article.title - title of the article
  * @param {string} article.description - short description of the article that shown in the list
  * @param {string} article.content - text content of she article
- * @returns {Promise<(boolean|Error)>} represents creation query execution
+ * @returns {Promise<(Object|Error)>} represents creation query execution with returning of created object
  */
 exports.createArticle = ({ ownerId, title, description, content }) => {
   const id = uuid.v4()
@@ -30,7 +30,7 @@ exports.createArticle = ({ ownerId, title, description, content }) => {
   return new Promise((resolve, reject) => {
     db.run(createArticleScript, params, (error) => {
       if (error) return reject(error)
-      resolve(true)
+      resolve({ id, ownerId, title, description, content, createdAt })
     })
   })
 }
@@ -45,6 +45,7 @@ exports.getAllArticles = () => {
       if (error) return reject(error)
       const articles = rows.map((row) => ({
         id: row.id,
+        image: path.join('/assets/article', row.id + '.jpg'),
         title: row.title,
         ownerId: row.owner_id,
         description: row.description,

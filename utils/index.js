@@ -5,6 +5,7 @@
 
 const fs = require('fs')
 const path = require('path')
+const Busboy = require('busboy')
 
 /**
  * Contains dictionary object of mime types
@@ -281,7 +282,6 @@ exports.sendResponseJSON = (response, body, code = 200, headers = {}) => {
  * @returns {Promise<(boolean|Error)>} Promise object represents status of Stream prcoess
  */
 exports.sendResponseStream = (response, filePath) => {
-  console.log(filePath)
   const mimeType = mime[path.extname(filePath)] || mime['.txt']
 
   return new Promise((resolve, reject) => {
@@ -340,6 +340,31 @@ exports.getRequestCookie = (request) => {
     const value = pair.replace(/^.*=/g, '')
     return { ...result, [key]: decodeURI(value) }
   }, {})
+}
+
+/**
+ * Returns Promise that reporesents multiline request data
+ * @param {ClientRequest} request - request to process
+ * @returns {Promise<(Object| Error)>} reporesent multiline request's data
+ */
+exports.getRequestMultilineData = (request) => {
+  return new Promise((resolve, reject) => {
+    const result = {}
+    const busboy = new Busboy({ headers: request.headers })
+    busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+      const fileData = []
+      file.on('data', (data) => fileData.push(data))
+      file.on('end', () => { result[fieldname] = Buffer.concat(fileData) })
+    })
+    busboy.on('field', (fieldname, value) => {
+      result[fieldname] = value
+    })
+    busboy.on('finish', () => {
+      resolve(result)
+    })
+    busboy.on('error', (error) => reject(error))
+    request.pipe(busboy)
+  })
 }
 
 exports.getFormData = (data) => {
