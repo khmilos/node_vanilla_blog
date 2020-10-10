@@ -9,7 +9,8 @@ const {
   sendResponseStream,
   getURLPath,
   getURLFileExtension,
-  getRequestCookie
+  getRequestCookie,
+  sendRedirect
 } = require('../utils')
 const { getSessionData } = require('../libs/session')
 const { getAllArticles } = require('../models/article')
@@ -26,7 +27,9 @@ exports.homePage = async (request, response) => {
     const { session_id: sessionId } = getRequestCookie(request)
     const sessionData = getSessionData(sessionId)
 
-    const articles = await getAllArticles()
+    const articles = (await getAllArticles()).sort((A, B) => {
+      return Math.round(B.createdAt) - Math.round(A.createdAt)
+    })
 
     sendResponse(
       response,
@@ -48,6 +51,8 @@ exports.profilePage = async (request, response) => {
   try {
     const { session_id: sessionId } = getRequestCookie(request)
     const sessionData = getSessionData(sessionId)
+
+    if (!sessionData?.user?.id) return sendRedirect(response, '/login/google')
 
     const articles = await getAllArticles()
 

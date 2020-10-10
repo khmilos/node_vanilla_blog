@@ -4,6 +4,10 @@ mixin card(article)
       a(href=`/${article.id}`).card__title-link
         h4.card__title.js-card-title= article.title
       .card__info
+        p.card__author= article.author.nickname
+        - const data = new Date(Math.round(article.createdAt))
+        - const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        p.card__date= `${data.getHours()}:${data.getMinutes()} ${data.getDay()} ${monthNames[data.getMonth()]} ${data.getFullYear()}`
       h5.card__description= article.description
     a(href=`/${article.id}`)
       img(

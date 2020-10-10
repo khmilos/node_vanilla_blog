@@ -47,7 +47,10 @@ exports.getAllArticles = () => {
         id: row.id,
         image: path.join('/assets/article', row.id + '.jpg'),
         title: row.title,
-        ownerId: row.owner_id,
+        author: {
+          id: row.author_id,
+          nickname: row.author_nickname
+        },
         description: row.description,
         content: row.content,
         createdAt: row.created_at

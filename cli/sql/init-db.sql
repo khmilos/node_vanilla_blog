@@ -12,12 +12,12 @@ create table user (
 
 create table article (
   id text primary key not null,
-  owner_id text not null,
+  author_id text not null,
   title text not null,
   description text not null,
   content text not null,
   created_at text not null,
-  foreign key (owner_id)
+  foreign key (author_id)
     references user (id)
       on delete cascade
       on update cascade

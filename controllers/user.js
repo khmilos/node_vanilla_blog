@@ -68,7 +68,7 @@ exports.callbackGoogle = async (request, response) => {
 
     const sessionId = createSession({ user })
     response.setHeader('Set-Cookie', `session_id=${sessionId}; Path=/`)
-    sendRedirect(response, '/')
+    sendRedirect(response, '/profile')
   } catch (error) {
     console.log(error)
     sendResponse(response, templates[404](), '.html', 404)
