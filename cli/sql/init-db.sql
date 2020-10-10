@@ -8,7 +8,20 @@ create table user (
   id text primary key not null,
   nickname text not null,
   avatar text not null
-)
+);
+
+create table article (
+  id text primary key not null,
+  owner_id text not null,
+  title text not null,
+  description text not null,
+  content text not null,
+  created_at text not null,
+  foreign key (owner_id)
+    references user (id)
+      on delete cascade
+      on update cascade
+);
 
 -- CREATE TABLE user (
 --   id TEXT PRIMARY KEY NOT NULL,
