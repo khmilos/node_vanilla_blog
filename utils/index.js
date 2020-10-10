@@ -367,6 +367,11 @@ exports.getRequestMultilineData = (request) => {
   })
 }
 
+/**
+ * Returns object dictionary that represents parsed form's data
+ * @param {string} data - form's data to process
+ * @returns {Object} parsed to object dictionary form's data
+ */
 exports.getFormData = (data) => {
   return data.split('&')
     .reduce((result, pair) => ({
