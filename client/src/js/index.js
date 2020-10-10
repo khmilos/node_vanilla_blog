@@ -1,3 +1,5 @@
+import modalFactory from './components/modalFactory'
+
 const initSearchBar = () => {
   const search = document.querySelector('#search')
   const cards = [...document.querySelectorAll('.js-card')]
@@ -24,3 +26,11 @@ const initSearchBar = () => {
 }
 
 initSearchBar()
+
+modalFactory(
+  document.querySelector('.js-modal-article-create'),
+  {
+    toOpen: [document.querySelector('.js-modal-article-create-open')],
+    toClose: [document.querySelector('.js-modal-article-create-close')]
+  }
+)

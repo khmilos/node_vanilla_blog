@@ -1,0 +1,36 @@
+@use '../../variables' as v
+
+
+.form
+  flex-direction: column
+  padding-top: 30px
+
+  &__field
+    flex-direction: column
+    margin-bottom: 15px
+
+    &:last-child
+      margin-bottom: 0
+
+  &__label
+    margin-bottom: 15px
+    color: v.$cl-title
+    font-size: v.$fs-text
+
+  &__text, &__textarea
+    padding: 7px 10px
+    background: v.$bg-panel
+    border: 1px solid v.$bg-addition
+    border-radius: 15px
+    color: v.$cl-text
+    font-size: v.$fs-text
+
+  &__text
+    height: 40px
+
+  &__textarea
+    resize: none
+    &_short
+      height: 100px
+    &_large
+      height: 300px

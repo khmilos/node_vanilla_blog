@@ -1,3 +1,35 @@
 mixin modalCreate()
-  .modal.modal_active
-    p asdasdasd
+  .modal.js-modal-article-create
+    .modal__body
+      button.modal__close.js-modal-article-create-close
+      h2.modal__title Create article:
+      form(
+        id="article-create"
+        method="POST"
+      ).form
+        .form__field
+          label.form__label Aritcle's Title:
+          input(
+            name="title"
+            id="article-create-title"
+            type="text"
+            placeholder="Article's Title..."
+          ).form__text
+        .form__field
+          label.form__label Article's Description:
+          textarea(
+            name="description"
+            id="article-create-description"
+            placeholder="Article's Description..."
+          ).form__textarea.form__textarea_short
+        .form__field
+          label.form__label Article's Content:
+          textarea(
+            name="content"
+            id="article-create-content"
+            placeholder="Article's Content..."
+          ).form__textarea.form__textarea_large
+        .form__field
+          button(
+            type="submit"
+          ).button Post
