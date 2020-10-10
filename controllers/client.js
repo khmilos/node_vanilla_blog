@@ -11,32 +11,28 @@ const {
   getURLFileExtension,
   getRequestCookie
 } = require('../utils')
-const templates = require('../templates')
-const staticFiles = require('../staticFiles')
-const { userAuthorization } = require('../models/user')
+const { getSessionData } = require('../libs/session')
 const { getAllArticles } = require('../models/article')
+const staticFiles = require('../staticFiles')
+const templates = require('../templates')
 
 /**
- * Creates rendered home page response
- * @param {ClientRequest} request
- * @param {ServerResponse} response
+ * Sends rendered home page response
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
  */
 exports.homePage = async (request, response) => {
   try {
-    const { access_token: accessToken } = getRequestCookie(request)
-    let user = null
-    try {
-      user = accessToken ? await userAuthorization(accessToken) : null
-    } catch (error) {
-      response.setHeader(
-        'Set-Cookie',
-        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      )
-    }
+    const { session_id: sessionId } = getRequestCookie(request)
+    const sessionData = getSessionData(sessionId)
 
     const articles = await getAllArticles()
 
-    sendResponse(response, templates.home({ articles, user }), '.html')
+    sendResponse(
+      response,
+      templates.home({ articles, ...sessionData }),
+      '.html'
+    )
   } catch (error) {
     console.log(error)
     sendResponse(response, templates[404](), '.html', 404)
@@ -45,25 +41,21 @@ exports.homePage = async (request, response) => {
 
 /**
  * Sends rendered profile page response
- * @param {ClientRequest} request
- * @param {ServerResponse} response
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
  */
 exports.profilePage = async (request, response) => {
   try {
-    const { access_token: accessToken } = getRequestCookie(request)
-    let user = null
-    try {
-      user = accessToken ? await userAuthorization(accessToken) : null
-    } catch (error) {
-      response.setHeader(
-        'Set-Cookie',
-        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      )
-    }
+    const { session_id: sessionId } = getRequestCookie(request)
+    const sessionData = getSessionData(sessionId)
 
     const articles = await getAllArticles()
 
-    sendResponse(response, templates.profile({ articles, user }), '.html')
+    sendResponse(
+      response,
+      templates.profile({ articles, ...sessionData }),
+      '.html'
+    )
   } catch (error) {
     console.log(error)
     sendResponse(response, templates[404](), '.html', 404)
@@ -71,9 +63,9 @@ exports.profilePage = async (request, response) => {
 }
 
 /**
- * Creates static file response
- * @param {ClientRequest} request
- * @param {ServerResponse} response
+ * Sends static file data or response stream to dynamic file in assets folder
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
  */
 exports.sendFile = async (request, response) => {
   try {

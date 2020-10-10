@@ -13,7 +13,7 @@ const {
   sendRedirect
 } = require('../utils')
 const { createArticle } = require('../models/article')
-const { userAuthorization } = require('../models/user')
+const { getSessionData } = require('../libs/session')
 
 /**
  * Creates new article and redirects to profile page
@@ -22,16 +22,9 @@ const { userAuthorization } = require('../models/user')
  */
 exports.createArticleController = async (request, response) => {
   try {
-    const { access_token: accessToken } = getRequestCookie(request)
-    let user = null
-    try {
-      user = accessToken ? await userAuthorization(accessToken) : null
-    } catch (error) {
-      response.setHeader(
-        'Set-Cookie',
-        'access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-      )
-    }
+    const { session_id: sessionId } = getRequestCookie(request)
+    const sessionData = getSessionData(sessionId)
+    if (!sessionData?.user?.id) return sendRedirect(response, '/')
 
     const {
       title,
@@ -40,7 +33,7 @@ exports.createArticleController = async (request, response) => {
       image
     } = await getRequestMultilineData(request)
     const article = await createArticle({
-      ownerId: user.id,
+      ownerId: sessionData.user.id,
       title,
       description,
       content

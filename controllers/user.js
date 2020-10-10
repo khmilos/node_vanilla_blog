@@ -14,6 +14,8 @@ const {
   googleClientId,
   googleClientSecret
 } = require('../config')
+const { createSession } = require('../libs/session')
+const { userAuthorization } = require('../models/user')
 const templates = require('../templates')
 
 /**
@@ -61,7 +63,11 @@ exports.callbackGoogle = async (request, response) => {
       { headers }
     )
 
-    response.setHeader('Set-Cookie', `access_token=${accessToken}; Path=/`)
+    // Request to Google API for user's data with using access token
+    const user = await userAuthorization(accessToken)
+
+    const sessionId = createSession({ user })
+    response.setHeader('Set-Cookie', `session_id=${sessionId}; Path=/`)
     sendRedirect(response, '/')
   } catch (error) {
     console.log(error)
