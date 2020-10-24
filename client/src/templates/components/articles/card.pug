@@ -1,4 +1,4 @@
-mixin card(article)
+mixin card(article, isProfile=false)
   article.card.js-card
     .card__content
       a(href=`/article/${article.id}`).card__title-link
@@ -14,3 +14,6 @@ mixin card(article)
         src=article.image
         alt="Article"
       ).card__image
+    if isProfile
+      .card__controll
+        button.button.button_warning Delete

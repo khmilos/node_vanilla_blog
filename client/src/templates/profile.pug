@@ -24,7 +24,7 @@ block main
       .row
         each article in articles
           .col
-            +card(article)
+            +card(article, true)
 
 block modals
   +modalCreate()
