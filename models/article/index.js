@@ -82,7 +82,8 @@ exports.getArticleById = (id) => {
         title: row.title,
         author: {
           id: row.author_id,
-          nickname: row.author_nickname
+          nickname: row.author_nickname,
+          avatar: row.author_avatar
         },
         description: row.description,
         content: row.content,

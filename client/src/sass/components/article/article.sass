@@ -1,0 +1,51 @@
+@use '../../variables' as v
+
+
+.article
+  &__image
+    margin-bottom: 15px
+    width: 100%
+
+  &__title
+    margin-bottom: 15px
+    color: v.$cl-title
+    font-size: v.$fs-caption
+    font-weight: 700
+
+  &__description
+    margin-bottom: 15px
+    color: v.$cl-info
+    font-size: v.$fs-text
+
+  &__info
+    position: relative
+    padding: 30px 0 30px 57.5px
+    display: flex
+    flex-wrap: wrap
+    border-bottom: 1px solid v.$bg-addition
+
+  &__author-avatar
+    position: absolute
+    left: 0
+    top: 50%
+    width: 50px
+    height: 50px
+    border-radius: 50%
+    box-shadow: v.$bs-icon
+    transform: translateY(-50%)
+
+  &__author
+    margin: 0 7.5px
+    color: v.$cl-title
+    font-size: v.$fs-info
+    font-weight: 700
+
+  &__date
+    margin: 0 7.5px
+    color: v.$cl-info
+    font-size: v.$fs-info
+
+  &__content
+    padding: 50px 0
+    color: v.$cl-text
+    font-size: v.$fs-text

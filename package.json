@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "init-db": "node cli/init_db.js",
-    "dev": "nodemon app.js -e js,mjs,json,pug",
+    "dev": "nodemon app.js -e js,mjs,json,pug,sql",
     "start": "node app.js"
   },
   "keywords": [],

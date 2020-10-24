@@ -71,7 +71,11 @@ exports.updateUser = ({ id, nickname, avatar }) => {
  * @returns {Object} user - user's data
  */
 exports.userAuthorization = async (accessToken) => {
-  const { data: { id, name: nickname, picture: avatar } } = await axios.get(`https://www.googleapis.com/oauth2/v2/userinfo?access_token=${accessToken}`)
+  const { data: { id, name: nickname, picture: avatar } } = await axios
+    .get(
+      'https://www.googleapis.com/' +
+      `oauth2/v2/userinfo?access_token=${accessToken}`
+    )
 
   const user = { id, nickname, avatar }
 

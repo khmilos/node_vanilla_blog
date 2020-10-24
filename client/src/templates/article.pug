@@ -2,6 +2,22 @@ extends base.pug
 
 
 block main
-  main.main
+  main.main.article
+    img(
+      src=article.image
+      alt="Article"
+    ).article__image
+
     .container
-      p
+      h1.article__title= article.title
+      h2.article__description= article.description
+      .article__info
+        img(
+          src=article.author.avatar
+          alt="Author"
+        ).article__author-avatar
+        p.article__author= article.author.nickname
+        - const data = new Date(Math.round(article.createdAt))
+        - const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+        p.article__date= `${data.getHours()}:${data.getMinutes()} ${data.getDay()} ${monthNames[data.getMonth()]} ${data.getFullYear()}`
+      p.article__content= article.content

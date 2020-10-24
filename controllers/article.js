@@ -24,12 +24,15 @@ const templates = require('../templates')
  */
 exports.displayArticleController = async (request, response, entities) => {
   try {
+    const { session_id: sessionId } = getRequestCookie(request)
+    const sessionData = getSessionData(sessionId)
+
     const { id } = entities
     const article = await getArticleById(id)
 
     sendResponse(
       response,
-      templates.article({ article }),
+      templates.article({ article, ...sessionData }),
       '.html'
     )
   } catch (error) {
