@@ -17,6 +17,10 @@ const getArticleByIdScript = readSQLFile(path.join(
   process.cwd(),
   '/models/article/sql/getArticleById.sql'
 ))
+const deleteArticleScript = readSQLFile(path.join(
+  process.cwd(),
+  '/models/article/sql/deleteArticle.sql'
+))
 
 /**
  * Returns status of creation article query script execution
@@ -37,6 +41,20 @@ exports.createArticle = ({ ownerId, title, description, content }) => {
     db.run(createArticleScript, params, (error) => {
       if (error) return reject(error)
       resolve({ id, ownerId, title, description, content, createdAt })
+    })
+  })
+}
+
+/**
+ * Returns status of deletion article query script execution
+ * @param {string} id - id of the article
+ * @return {Promise<(Boolean|Error)>} represents deletion query execution
+ */
+exports.deleteArticle = (id) => {
+  return new Promise((resolve, reject) => {
+    db.run(deleteArticleScript, id, (error) => {
+      if (error) return reject(error)
+      resolve(true)
     })
   })
 }

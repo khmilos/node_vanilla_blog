@@ -15,5 +15,9 @@ mixin card(article, isProfile=false)
         alt="Article"
       ).card__image
     if isProfile
-      .card__controll
+      form(
+        id="article-delete"
+        action=`/api/article/${article.id}/delete`
+        method="POST"
+      ).card__controll
         button.button.button_warning Delete

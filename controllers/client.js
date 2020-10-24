@@ -54,7 +54,9 @@ exports.profilePage = async (request, response) => {
 
     if (!sessionData?.user?.id) return sendRedirect(response, '/login/google')
 
-    const articles = await getAllArticles()
+    const articles = (await getAllArticles()).sort((A, B) => {
+      return Math.round(B.createdAt) - Math.round(A.createdAt)
+    })
 
     sendResponse(
       response,

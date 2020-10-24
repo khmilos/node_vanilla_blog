@@ -13,7 +13,7 @@ const {
   getRequestCookie,
   sendRedirect
 } = require('../utils')
-const { createArticle, getArticleById } = require('../models/article')
+const { createArticle, getArticleById, deleteArticle } = require('../models/article')
 const { getSessionData } = require('../libs/session')
 const templates = require('../templates')
 
@@ -21,6 +21,7 @@ const templates = require('../templates')
  * Renders article page
  * @param {ClientRequest} request - request to process
  * @param {ServerResponse} response - response to process
+ * @param {Object} entities - dictionary of entities in url path
  */
 exports.displayArticleController = async (request, response, entities) => {
   try {
@@ -74,5 +75,33 @@ exports.createArticleController = async (request, response) => {
   } catch (error) {
     console.log(error)
     sendResponseJSON(response, fail(null, 'creation fail'), 404)
+  }
+}
+
+/**
+ * Deletes article
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
+ * @param {Object} entities - dictionary of entities in url path
+ */
+exports.deleteArticleController = async (request, response, entities) => {
+  try {
+    const { session_id: sessionId } = getRequestCookie(request)
+    const sessionData = getSessionData(sessionId)
+    if (!sessionData?.user?.id) return sendRedirect(response, '/')
+
+    const { id } = entities
+    await deleteArticle(id)
+
+    fs.unlinkSync(path.join(
+      process.cwd(),
+      '/assets/article/',
+      id + '.jpg'
+    ))
+
+    sendRedirect(response, '/profile')
+  } catch (error) {
+    console.log(error)
+    sendResponse(response, templates[404](), '.html', 404)
   }
 }
