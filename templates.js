@@ -10,5 +10,9 @@ module.exports = {
     process.cwd(),
     '/client/dist/profile.pug'
   )),
+  article: pug.compileFile(path.join(
+    process.cwd(),
+    '/client/dist/article.pug'
+  )),
   404: pug.compileFile(path.join(process.cwd(), '/client/dist/404.pug'))
 }

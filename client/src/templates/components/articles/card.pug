@@ -1,7 +1,7 @@
 mixin card(article)
   article.card.js-card
     .card__content
-      a(href=`/${article.id}`).card__title-link
+      a(href=`/article/${article.id}`).card__title-link
         h4.card__title.js-card-title= article.title
       .card__info
         p.card__author= article.author.nickname
@@ -9,7 +9,7 @@ mixin card(article)
         - const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
         p.card__date= `${data.getHours()}:${data.getMinutes()} ${data.getDay()} ${monthNames[data.getMonth()]} ${data.getFullYear()}`
       h5.card__description= article.description
-    a(href=`/${article.id}`)
+    a(href=`/article/${article.id}`)
       img(
         src=article.image
         alt="Article"

@@ -13,15 +13,21 @@ const getAllArticlesScript = readSQLFile(path.join(
   process.cwd(),
   '/models/article/sql/getAllArticles.sql'
 ))
+const getArticleByIdScript = readSQLFile(path.join(
+  process.cwd(),
+  '/models/article/sql/getArticleById.sql'
+))
 
 /**
  * Returns status of creation article query script execution
  * @param {Object} article - aritcle's object
  * @param {string} article.ownerId - id of user that creates article
  * @param {string} article.title - title of the article
- * @param {string} article.description - short description of the article that shown in the list
+ * @param {string} article.description - short description of the article that
+ * shown in the list
  * @param {string} article.content - text content of she article
- * @returns {Promise<(Object|Error)>} represents creation query execution with returning of created object
+ * @returns {Promise<(Object|Error)>} represents creation query execution with
+ * returning of created object
  */
 exports.createArticle = ({ ownerId, title, description, content }) => {
   const id = uuid.v4()
@@ -37,7 +43,8 @@ exports.createArticle = ({ ownerId, title, description, content }) => {
 
 /**
  * Returns Promise reporesent of article list selection from database
- * @returns {Promise<(Object|Error)>} reporesents article list selection from database
+ * @returns {Promise<(Object|Error)>} represents article list selection from
+ * database
  */
 exports.getAllArticles = () => {
   return new Promise((resolve, reject) => {
@@ -56,6 +63,32 @@ exports.getAllArticles = () => {
         createdAt: row.created_at
       }))
       resolve(articles)
+    })
+  })
+}
+
+/**
+ * Returns Promise reporesent of article selection from database by id
+ * @returns {Promise<(Object|Error)>} represents article selection from
+ * database by specified id
+ */
+exports.getArticleById = (id) => {
+  return new Promise((resolve, reject) => {
+    db.get(getArticleByIdScript, id, (error, row) => {
+      if (error) return reject(error)
+      const article = {
+        id: row.id,
+        image: path.join('/assets/article', row.id + '.jpg'),
+        title: row.title,
+        author: {
+          id: row.author_id,
+          nickname: row.author_nickname
+        },
+        description: row.description,
+        content: row.content,
+        createdAt: row.created_at
+      }
+      resolve(article)
     })
   })
 }

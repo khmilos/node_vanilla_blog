@@ -6,14 +6,37 @@
 const fs = require('fs')
 const path = require('path')
 const {
+  sendResponse,
   sendResponseJSON,
   fail,
   getRequestMultilineData,
   getRequestCookie,
   sendRedirect
 } = require('../utils')
-const { createArticle } = require('../models/article')
+const { createArticle, getArticleById } = require('../models/article')
 const { getSessionData } = require('../libs/session')
+const templates = require('../templates')
+
+/**
+ * Renders article page
+ * @param {ClientRequest} request - request to process
+ * @param {ServerResponse} response - response to process
+ */
+exports.displayArticleController = async (request, response, entities) => {
+  try {
+    const { id } = entities
+    const article = await getArticleById(id)
+
+    sendResponse(
+      response,
+      templates.article({ article }),
+      '.html'
+    )
+  } catch (error) {
+    console.log(error)
+    sendResponse(response, templates[404](), '.html', 404)
+  }
+}
 
 /**
  * Creates new article and redirects to profile page
