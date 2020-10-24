@@ -34,3 +34,11 @@ modalFactory(
     toClose: [document.querySelector('.js-modal-article-create-close')]
   }
 )
+
+modalFactory(
+  document.querySelector('.js-modal-user-auth'),
+  {
+    toOpen: [document.querySelector('.js-modal-user-auth-open')],
+    toClose: [document.querySelector('.js-modal-user-auth-close')]
+  }
+)

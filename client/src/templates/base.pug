@@ -1,3 +1,6 @@
+include ./components/user/modalUserAuth.pug
+
+
 html
   head
     meta(charset="UTF-8")
@@ -34,11 +37,12 @@ html
             a(href="/profile").panel__avatar-wrapper
               img(src=user.avatar alt="User").panel__avatar
         else
-          a(href="/login/google").panel__login
+          button.panel__login.js-modal-user-auth-open
 
     block main
 
     block modals
+      +modalUserAuth()
 
     footer.panel.panel_bottom
       .container

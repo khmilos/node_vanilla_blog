@@ -1,4 +1,5 @@
 @use './variables' as v
+@use './svg'
 
 
 .main 
@@ -21,6 +22,7 @@
   color: v.$cl-info
   font-size: v.$fs-text
 
+
 .button
   padding: 0 20px
   height: 50px
@@ -34,3 +36,27 @@
   &:hover, &:active
     background: v.$bg-addition
     color: v.$bg-body
+
+
+.button-google
+  position: relative
+  display: flex
+  align-items: center
+  margin: 20px 0
+  padding: 0 20px 0 60px
+  height: 40px
+  background: v.$bg-google
+  color: v.$cl-google
+  font-size: v.$fs-title
+
+  &:after
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    display: flex
+    width: 40px
+    height: 40px
+    background: svg.$google-auth no-repeat center
+    background-size: 30px
+
