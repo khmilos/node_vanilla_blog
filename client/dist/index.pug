@@ -1,0 +1,18 @@
+extends base.pug
+include ./components/articles/card.pug
+
+
+block main
+  main.main
+    .container
+      .search.mb-50
+        input(
+          type="text"
+          name="search"
+          aria-label="Search through site content"
+          placeholder="Search article..."
+        )#search.search__input
+      .row
+        each article in articles
+          .col
+            +card(article)

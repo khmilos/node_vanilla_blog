@@ -1,0 +1,52 @@
+include ./components/user/modalUserAuth.pug
+
+
+html
+  head
+    meta(charset="UTF-8")
+    meta(
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    )
+    title page
+    link(
+      rel="stylesheet"
+      href="/style.css"
+    )
+    link(
+      rel="Shortcut Icon"
+      href="/static/favicon.ico"
+      type="image/x-icon"
+    )
+    link(
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    )
+    script(
+      src="/main.boundle.js"
+      defer
+    )
+
+  body
+    header.panel
+      .container
+        a(href="/").panel__logo MyLogo
+        if user
+          .panel__profile
+            a(href="/profile").panel__user #{user.nickname}
+            a(href="/profile").panel__avatar-wrapper
+              img(src=user.avatar alt="User").panel__avatar
+        else
+          button.panel__login.js-modal-user-auth-open
+
+    block main
+
+    block modals
+      +modalUserAuth()
+
+    footer.panel.panel_bottom
+      .container
+        a(href="/").panel__logo MyLogo
+        nav
+          a(href="/about").panel__link About
+          a(href="/help").panel__link Help

@@ -8,7 +8,7 @@ const initSearchBar = () => {
   const titles = cards.map((card) => {
     return card
       .querySelector('.js-card-title')
-      ?.textContent
+      .textContent
       .trim()
       .toLowerCase()
   })

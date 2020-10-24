@@ -51,7 +51,7 @@ exports.createArticleController = async (request, response) => {
   try {
     const { session_id: sessionId } = getRequestCookie(request)
     const sessionData = getSessionData(sessionId)
-    if (!sessionData?.user?.id) return sendRedirect(response, '/')
+    if (!sessionData) return sendRedirect(response, '/')
 
     const {
       title,
@@ -88,7 +88,7 @@ exports.deleteArticleController = async (request, response, entities) => {
   try {
     const { session_id: sessionId } = getRequestCookie(request)
     const sessionData = getSessionData(sessionId)
-    if (!sessionData?.user?.id) return sendRedirect(response, '/')
+    if (!sessionData) return sendRedirect(response, '/')
 
     const { id } = entities
     await deleteArticle(id)
